@@ -83,72 +83,65 @@
   <p><strong>Đáp án:</strong> Nếu không đặt bộ đếm thì hàm <code>while</code> sẽ chỉ tăng biến đếm lên 1 đơn vị và đồng nghĩa là nó không lặp lại. Nếu đặt <code>alarm(1)</code> trong hàm <code>handler</code> thì vì <code>while(1)</code> nó sẽ quay trở lại để kích hoạt thêm 1s nữa và sẽ nhận được tín hiệu <code>SIGALRM</code>
   chứ không bị dừng ở giây thứ nhất nữa.</p>
 
-  <h3>Vấn đề 2: Ngược lại với vấn đề 1 vậy nếu không đặt bộ đếm ở hàm main thì chuyện gì sẽ xảy ra ?</h3>
-
-  <p><strong>Đáp án:</strong></p>
-
   <p><img width="859" height="64" alt="Screenshot from 2025-10-22 15-18-20" src="https://github.com/user-attachments/assets/17d90b5d-a34d-4435-9c83-c668f2a466c3" /></p>
 
-  <p>Vì không có bộ đếm nên sẽ không có tín hiệu nào cả điều này khiến việc chờ đợi tín hiệu sẽ kéo dài mãi vì vòng lặp <code>while(1) pause()</code>. hãy sử dụng html để làm thành 1 bản README hoàn thiện nhưng không được phép thay đổi nội dung</p>
-Chủ đề 1.3: Tạo giao tiếp giữa các process bằng tín hiệu
-Mô tả:
+  <p>Vì không có bộ đếm nên sẽ không có tín hiệu nào cả điều này khiến việc chờ đợi tín hiệu sẽ kéo dài mãi vì vòng lặp <code>while(1) pause()</code>.</p>
 
-Chương trình Problem3.c tạo 2 tiến trình cha và con và sử dụng tín hiệu SIGUSR1 để giao tiếp giữa chúng.
+  <hr>
 
-Để có thể hiểu rõ về tiến trình thì bạn nên tìm hiểu về tiến trình và cách hoạt động của nó. Chương trình này viết để thỏa mãn các yêu cầu sau:
+  <h2>Chủ đề 1.3: Tạo giao tiếp giữa các process bằng tín hiệu</h2>
 
-Dùng fork() để tạo process con từ process cha.
+  <p><strong>Mô tả:</strong></p>
+  <p>Chương trình <code>Problem3.c</code> tạo 2 tiến trình cha và con và sử dụng tín hiệu <code>SIGUSR1</code> để giao tiếp giữa chúng.</p>
 
-Process cha sẽ gửi tín hiệu SIGUSR1 cho process con mỗi 2 giây.
+  <p>Để có thể hiểu rõ về tiến trình thì bạn nên tìm hiểu về tiến trình và cách hoạt động của nó. Chương trình này viết để thỏa mãn các yêu cầu sau:</p>
 
-Khi nhận tín hiệu SIGUSR1, process con sẽ in ra thông báo "Received signal from parent".
+  <ul>
+    <li>Dùng <code>fork()</code> để tạo process con từ process cha.</li>
+    <li>Process cha sẽ gửi tín hiệu <code>SIGUSR1</code> cho process con mỗi 2 giây.</li>
+    <li>Khi nhận tín hiệu <code>SIGUSR1</code>, process con sẽ in ra thông báo “Received signal from parent”.</li>
+    <li>Dừng chương trình sau khi đã gửi tín hiệu 5 lần.</li>
+  </ul>
 
-Dừng chương trình sau khi đã gửi tín hiệu 5 lần.
+  <h3>Vấn đề:</h3>
+  <p><strong>Tại sao lại phải dùng <code>kill()</code> để gửi tín hiệu trong bài này?</strong></p>
 
-Vấn đề:
+  <p><strong>Đáp án:</strong><br>
+  Chúng ta cần sử dụng <code>kill()</code> để gửi tín hiệu vì sau khi <code>fork()</code>, tiến trình cha và con có các PID riêng biệt và không chia sẻ cùng không gian địa chỉ.</p>
 
-Tại sao lại phải dùng kill() để gửi tín hiệu trong bài này?
+  <p>Hàm <code>kill()</code> là một system call (vì để giao tiếp với tiến trình khác thì user phải thông qua kernel) dùng để gửi một tín hiệu (như <code>SIGUSR1</code>) đến một tiến trình khác trong hệ thống thông qua PID của tiến trình đó.</p>
 
-Đáp án:
-Chúng ta cần sử dụng kill() để gửi tín hiệu vì sau khi fork(), tiến trình cha và con có các PID riêng biệt và không chia sẻ cùng không gian địa chỉ.
+  <p>Do đó, để tiến trình cha có thể gửi tín hiệu <code>SIGUSR1</code> đến tiến trình con, việc sử dụng <code>kill()</code> là hoàn toàn hợp lý và cần thiết.</p>
 
-Hàm kill() là một system call (vì để giao tiếp với tiến trình khác thì user phải thông qua kernel) dùng để gửi một tín hiệu (như SIGUSR1) đến một tiến trình khác trong hệ thống thông qua PID của tiến trình đó.
+  <hr>
 
-Do đó, để tiến trình cha có thể gửi tín hiệu SIGUSR1 đến tiến trình con, việc sử dụng kill() là hoàn toàn hợp lý và cần thiết.
+  <h2>Chủ đề 1.4: Chương trình chờ tín hiệu kết hợp chờ người dùng nhập liệu</h2>
 
-Chủ đề 1.4: Chương trình chờ tín hiệu kết hợp chờ người dùng nhập liệu
-Mô tả:
+  <p><strong>Mô tả:</strong></p>
+  <p>Chương trình có thể nhận tín hiệu đồng thời cho phép người dùng nhập liệu từ bàn phím.</p>
 
-Chương trình có thể nhận tín hiệu đồng thời cho phép người dùng nhập liệu từ bàn phím.
+  <h3>Yêu cầu:</h3>
+  <ul>
+    <li>Viết một chương trình có thể nhận tín hiệu đồng thời cho phép người dùng nhập liệu từ bàn phím.</li>
+    <li>Dùng <code>select()</code> hoặc <code>poll()</code> để cho phép chương trình xử lý tín hiệu mà không làm gián đoạn khi nhận dữ liệu nhập từ bàn phím.</li>
+    <li>Khi nhận tín hiệu <code>SIGINT</code>, in ra thông báo “SIGINT received.”</li>
+    <li>Nếu nhận tín hiệu <code>SIGTERM</code>, thoát chương trình.</li>
+    <li>Khi người dùng nhập liệu và nhấn Enter, in nội dung ra màn hình console.</li>
+  </ul>
 
-Yêu cầu:
+  <h3>Ghi chú:</h3>
+  <p>Trong yêu cầu này, phần khó nhất có lẽ là hiểu <code>select()</code> là gì và sử dụng như thế nào.</p>
 
-Viết một chương trình có thể nhận tín hiệu đồng thời cho phép người dùng nhập liệu từ bàn phím.
+  <p>Bạn có thể tham khảo bài viết sau:<br>
+  <a href="https://vimentor.com/vi/lesson/i-o-multiplexing-select/">Giới thiệu về I/O Multiplexing và hàm select() – vimentor.com</a></p>
 
-Dùng select() hoặc poll() để cho phép chương trình xử lý tín hiệu mà không làm gián đoạn khi nhận dữ liệu nhập từ bàn phím.
-
-Khi nhận tín hiệu SIGINT, in ra thông báo "SIGINT received."
-
-Nếu nhận tín hiệu SIGTERM, thoát chương trình.
-
-Khi người dùng nhập liệu và nhấn Enter, in nội dung ra màn hình console.
-
-Ghi chú:
-
-Trong yêu cầu này, phần khó nhất có lẽ là hiểu select() là gì và sử dụng như thế nào.
-
-Bạn có thể tham khảo bài viết sau:
- Giới thiệu về I/O Multiplexing và hàm select() – vimentor.com
-
-Hoặc tìm đọc cuốn “The Linux Programming Interface”, sau đó tìm đến trang 1331 để hiểu hơn về system().
-
+  <p>Hoặc tìm đọc cuốn <em>“The Linux Programming Interface”</em>, sau đó tìm đến trang 1331 để hiểu hơn về <code>system()</code>.</p>
 
   <footer>
     <p>Generated README — nội dung do người dùng cung cấp. Không thay đổi nội dung gốc.</p>
   </footer>
 </body>
 </html>
-
 
 
 
