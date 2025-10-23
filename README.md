@@ -90,6 +90,58 @@
   <p><img width="859" height="64" alt="Screenshot from 2025-10-22 15-18-20" src="https://github.com/user-attachments/assets/17d90b5d-a34d-4435-9c83-c668f2a466c3" /></p>
 
   <p>Vì không có bộ đếm nên sẽ không có tín hiệu nào cả điều này khiến việc chờ đợi tín hiệu sẽ kéo dài mãi vì vòng lặp <code>while(1) pause()</code>. hãy sử dụng html để làm thành 1 bản README hoàn thiện nhưng không được phép thay đổi nội dung</p>
+Chủ đề 1.3: Tạo giao tiếp giữa các process bằng tín hiệu
+Mô tả:
+
+Chương trình Problem3.c tạo 2 tiến trình cha và con và sử dụng tín hiệu SIGUSR1 để giao tiếp giữa chúng.
+
+Để có thể hiểu rõ về tiến trình thì bạn nên tìm hiểu về tiến trình và cách hoạt động của nó. Chương trình này viết để thỏa mãn các yêu cầu sau:
+
+Dùng fork() để tạo process con từ process cha.
+
+Process cha sẽ gửi tín hiệu SIGUSR1 cho process con mỗi 2 giây.
+
+Khi nhận tín hiệu SIGUSR1, process con sẽ in ra thông báo "Received signal from parent".
+
+Dừng chương trình sau khi đã gửi tín hiệu 5 lần.
+
+Vấn đề:
+
+Tại sao lại phải dùng kill() để gửi tín hiệu trong bài này?
+
+Đáp án:
+Chúng ta cần sử dụng kill() để gửi tín hiệu vì sau khi fork(), tiến trình cha và con có các PID riêng biệt và không chia sẻ cùng không gian địa chỉ.
+
+Hàm kill() là một system call (vì để giao tiếp với tiến trình khác thì user phải thông qua kernel) dùng để gửi một tín hiệu (như SIGUSR1) đến một tiến trình khác trong hệ thống thông qua PID của tiến trình đó.
+
+Do đó, để tiến trình cha có thể gửi tín hiệu SIGUSR1 đến tiến trình con, việc sử dụng kill() là hoàn toàn hợp lý và cần thiết.
+
+Chủ đề 1.4: Chương trình chờ tín hiệu kết hợp chờ người dùng nhập liệu
+Mô tả:
+
+Chương trình có thể nhận tín hiệu đồng thời cho phép người dùng nhập liệu từ bàn phím.
+
+Yêu cầu:
+
+Viết một chương trình có thể nhận tín hiệu đồng thời cho phép người dùng nhập liệu từ bàn phím.
+
+Dùng select() hoặc poll() để cho phép chương trình xử lý tín hiệu mà không làm gián đoạn khi nhận dữ liệu nhập từ bàn phím.
+
+Khi nhận tín hiệu SIGINT, in ra thông báo "SIGINT received."
+
+Nếu nhận tín hiệu SIGTERM, thoát chương trình.
+
+Khi người dùng nhập liệu và nhấn Enter, in nội dung ra màn hình console.
+
+Ghi chú:
+
+Trong yêu cầu này, phần khó nhất có lẽ là hiểu select() là gì và sử dụng như thế nào.
+
+Bạn có thể tham khảo bài viết sau:
+ Giới thiệu về I/O Multiplexing và hàm select() – vimentor.com
+
+Hoặc tìm đọc cuốn “The Linux Programming Interface”, sau đó tìm đến trang 1331 để hiểu hơn về system().
+
 
   <footer>
     <p>Generated README — nội dung do người dùng cung cấp. Không thay đổi nội dung gốc.</p>
